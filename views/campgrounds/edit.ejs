@@ -1,0 +1,104 @@
+<% layout('layout/boilerplate.ejs') %>
+
+    <div class="row">
+        <h1 class="text-center">Edit <%=campground.title %>
+        </h1>
+        <div class="col-6 offset-3">
+
+            <body>
+                <form novalidate class="validated-editForm" action="/campgrounds/<%=campground.id%>?_method=PUT"
+                    method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Camp Name</label>
+                        <input type="text" class="form-control" name="campground[title]" id="title"
+                            value="<%=campground.title%>" required placeholder="what's the name of place">
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            *Required
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" class="form-control" name="campground[location]" id="location"
+                            value="<%=campground.location%>" required placeholder="location">
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            *Required
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Pricing</label>
+                        <div class="input-group">
+                            <span class="input-group-text">INR</span>
+                            <input type="number" id="price" required name="campground[price]"
+                                value="<%=campground.price%>" class="form-control">
+                            <span class="input-group-text">.00</span>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="invalid-feedback">
+                            *Required
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Camp Description</label>
+                        <textarea type="text" name="campground[description]" class="form-control" id="description"
+                            required placeholder="description"><%=campground.description%> </textarea>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            *Required
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Add Images</label>
+                        <input class="form-control" type="file" name="image" id="image" multiple>
+                    </div>
+                    <div class="mb-3">
+                        <% campground.images.forEach(function(img,i){ %>
+                            <img src="<%=img.thumbnail%>" class="img-thumbnail" alt="">
+                            <div class="form-check-inline">
+                                <input class="form-check-input" type="checkbox" value="<%=img.filename%>"
+                                    id="image-<%=i%>" name="deleteImages[]">
+                            </div>
+                            <label class="form-check-label" for="image-<%=i%>">
+                                Delete?
+                            </label>
+                            <% }) %>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Save Changes</button>
+                </form>
+                <a href="/campgrounds/<%=campground.id%>">Cancel</a>
+        </div>
+    </div>
+
+
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.querySelectorAll('.validated-editForm')
+
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>

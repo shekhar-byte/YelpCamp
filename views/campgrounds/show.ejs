@@ -1,0 +1,150 @@
+<% layout('layout/boilerplate.ejs') %>
+    <div class="row">
+        <div class="col-6">
+            <div id="campgroundCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <% if(campground.images.length){ %>
+                        <% campground.images.forEach((img,i)=> { %>
+                            <div class="carousel-item  <%=i===0?'active':''%> ">
+                                <img src="<%=img.url%>" class="d-block w-100" alt="...">
+                            </div>
+                            <% }) %>
+                                <% }else{ %>
+                                    <div class="carousel-item active ">
+                                        <img src="https://res.cloudinary.com/djmccyz52/image/upload/v1638258584/YelpCamp/y4crg8gmtxhohlralfxs.jpg"
+                                            class="d-block w-100" alt="...">
+                                    </div>
+                                    <% } %>
+                </div>
+                <% if(campground.images.length>1){ %>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#campgroundCarousel"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#campgroundCarousel"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                    <% } %>
+            </div>
+
+            <div class="card mb-3">
+
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%=campground.title%>
+                    </h5>
+                    <p class="card-text">
+                        <%=campground.description %>
+                    </p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-muted">
+                        <%=campground.location %>
+                    </li>
+                    <li class="list-group-item ">
+                        Submitted by
+                        <b>
+                            <%=campground.author.username %>
+                        </b>
+                    </li>
+                    <li class="list-group-item">
+                        <%=campground.price %> INR/day
+                    </li>
+                </ul>
+                <% if(currentUser && campground.author.equals(currentUser.id)){ %>
+                    <div class="card-body">
+                        <a class="btn btn-primary card-link" href="/campgrounds/<%=campground.id%>/edit">Edit</a>
+                        <form class="d-inline" action="/campgrounds/<%=campground.id%>?_method=DELETE" method="post">
+                            <button class="btn btn-danger card-link" type="submit">Delete</button>
+                        </form>
+                    </div>
+                    <% } %>
+                        <div class="card-footer text-muted">
+                            Last updated 2 days ago
+                        </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div id='map'></div>
+            <h2>Reviews</h2>
+            <% if(currentUser){ %>
+                <form action="/campgrounds/<%=campground.id%>/reviews" method="post" class="mb-3 validated-form"
+                    novalidate>
+                    <div class="mb-3">
+                        <label class="form-label" for="rating">Rating</label>
+                        <input class="form-range" type="range" min="1" max="5" id="rating" name="review[rating]">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="body">Review</label>
+                        <textarea class="form-control" name="review[body]" id="body" cols="30" required
+                            rows="3"></textarea>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            *Required
+                        </div>
+                    </div>
+                    <button class="btn btn-success">Post Review</button>
+                </form>
+                <% } %>
+                    <% for(let review of campground.reviews){ %>
+                        <div class="card">
+                            <div class="mb-3 card-body">
+                                <h5 class="card-title">Rating: <%=review.rating %>
+                                </h5>
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                    <%=review.author.username%>
+                                </h6>
+                                <p class="card-text">
+
+
+                                    Review: <%=review.body %>
+
+                                </p>
+                                <% if(currentUser && review.author.equals(currentUser.id)){ %>
+                                    <form
+                                        action="/campgrounds/<%=campground.id%>/reviews/<%=review._id%>?_method=DELETE"
+                                        method="post">
+                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                    <% } %>
+                            </div>
+                        </div>
+                        <% } %>
+        </div>
+
+        <script>
+            const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+            const campground = '<%-JSON.stringify(campground)%>'
+
+        </script>
+
+        <script src="/javascripts/showPageMap.js"></script>
+
+
+        <script>
+                // Example starter JavaScript for disabling form submissions if there are invalid fields
+                (function () {
+                    'use strict'
+
+                    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                    var forms = document.querySelectorAll('.validated-form')
+
+                    // Loop over them and prevent submission
+                    Array.prototype.slice.call(forms)
+                        .forEach(function (form) {
+                            form.addEventListener('submit', function (event) {
+                                if (!form.checkValidity()) {
+                                    event.preventDefault()
+                                    event.stopPropagation()
+                                }
+
+                                form.classList.add('was-validated')
+                            }, false)
+                        })
+                })()
+        </script>

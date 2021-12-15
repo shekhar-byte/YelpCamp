@@ -1,0 +1,64 @@
+<% layout('layout/boilerplate.ejs') %>
+
+    <div class="container d-flex justify-content-center align-items-center mb-5">
+        <div class="col-md-6  col-xl-4  ">
+            <div class="card shadow">
+                <div class="card-body">
+                    <img src="https://cdn.dribbble.com/users/1270426/screenshots/4467342/camping_badge.gif"
+                        class="card-img-top" alt="">
+                    <h4 class="card-title">Login</h4>
+                    <form action="/login" novalidate class="validated-form" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" autofocus name="username" id="username" required
+                                placeholder="Enter your username">
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                *Required
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" id="password" required
+                                placeholder="Enter Password">
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                *Required
+                            </div>
+                        </div>
+                        <button class="btn btn-success">Login</button>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.querySelectorAll('.validated-form')
+
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
